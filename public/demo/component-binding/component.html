@@ -11,14 +11,24 @@
 <body>
 <div class="container">
     <div class="row">
-        <div class="col-md-12"></div>
+        <div class="col-md-12" data-bind="component:'studentInfo'">
+        </div>
     </div>
 </div>
 
 <script type="text/javascript">
-    $.get('/users', function (data) {
-        alert(data);
+    ko.components.register('studentInfo', {
+        viewModel: function () {
+            var self = this;
+            $.get('/users', function (data) {
+                self = ko.mapping.fromJS(data);
+            });
+
+        },
+        template: '<ol><li data-bind="text: name"></li><li data-bind="text: age"></li></ol>'
     });
+
+    ko.applyBindings();
 </script>
 </body>
 </html>
