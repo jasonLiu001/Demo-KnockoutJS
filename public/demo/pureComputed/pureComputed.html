@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>pureComputed</title>
+    <link type="text/css" href="../libs/css/bootstrap.min.css">
+    <script type="text/javascript" src="../libs/knockout-debug.js"></script>
+    <script type="text/javascript" src="../libs/knockout.mapping.js"></script>
+    <script type="text/javascript" src="../libs/jquery.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>pureComputed和Computed的区别在于</h1>
+            <ul>
+                <li>
+                    pureComputed如果没有绑定到HTML元素，它是肯定不会被执行的，即使它的依赖项改变了
+                </li>
+                <li>
+                    Computed只要它依赖的项改变，就会被执行
+                </li>
+            </ul>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div id="result"></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function ViewModel() {
+        var self = this;
+
+        self.firstName = ko.observable('Steve');
+        self.lastName = ko.observable('Kennedy');
+
+        self.pureComputedExecutions = 0;
+        self.computedExecutions = 0;
+
+        self.pureComputedFullName = ko.pureComputed(function () {
+            // This is not recommended
+            self.pureComputedExecutions++;
+            return 'Hello ' + self.firstName() + ' ' + self.lastName();
+        });
+
+        self.computedFullName = ko.computed(function () {
+            self.computedExecutions++;
+            return 'Hello ' + self.firstName() + ' ' + self.lastName();
+        });
+    }
+
+    var viewModel = new ViewModel();
+    ko.applyBindings(viewModel);
+
+    $('#result').append('Pure computed executions: ' + viewModel.pureComputedExecutions+'<br/>');
+    $('#result').append('Computed executions: ' + viewModel.computedExecutions);
+</script>
+</body>
+</html>
